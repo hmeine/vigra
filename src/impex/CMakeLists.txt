@@ -44,6 +44,7 @@ ADD_LIBRARY(vigraimpex ${LIBTYPE}
     hdf5_rf_impex.cxx
     iccjpeg.c
     imageinfo.cxx
+	multi_impex.cxx
     jpeg.cxx
     png.cxx
     pnm.cxx
@@ -79,6 +80,6 @@ ENDIF(HDF5_FOUND)
 
 INSTALL(TARGETS vigraimpex
         EXPORT vigra-targets
-        RUNTIME DESTINATION bin 
-        LIBRARY DESTINATION lib${LIBDIR_SUFFIX} 
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib${LIBDIR_SUFFIX}
         ARCHIVE DESTINATION lib${LIBDIR_SUFFIX})

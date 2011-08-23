@@ -135,7 +135,7 @@ class VolumeImportInfo
 
         /** Query the pixel type of the image.
 
-            Same as getPixelType(), but the result is returned as a 
+            Same as getPixelType(), but the result is returned as a
             ImageImportInfo::PixelType enum. This is useful to implement
             a switch() on the pixel type.
 
@@ -198,11 +198,11 @@ class VolumeExportInfo
   public:
         /** Construct VolumeExportInfo object.
 
-            The volume will be stored in a by-slice manner, where the number of slices 
+            The volume will be stored in a by-slice manner, where the number of slices
             equals the depth of the volume. The file names will be enumerated like
             <tt>name_base+"000"+name_ext</tt>, <tt>name_base+"001"+name_ext</tt> etc.
             (the actual number of zeros depends on the depth). If the target image type
-            does not support the source voxel type, all slices will be mapped 
+            does not support the source voxel type, all slices will be mapped
             simultaneously to the appropriate target range.
             The file type will be guessed from the extension unless overridden
             by \ref setFileType(). Recognized extensions: '.bmp', '.gif',
@@ -312,15 +312,15 @@ class VolumeExportInfo
             </DL>
          **/
     VIGRA_EXPORT const char * getPixelType() const;
-    
+
     VIGRA_EXPORT VolumeExportInfo & setForcedRangeMapping(double fromMin, double fromMax,
-                                                     double toMin, double toMax);    
+                                                     double toMin, double toMax);
     VIGRA_EXPORT bool hasForcedRangeMapping() const;
     VIGRA_EXPORT double getFromMin() const;
     VIGRA_EXPORT double getFromMax() const;
     VIGRA_EXPORT double getToMin() const;
     VIGRA_EXPORT double getToMax() const;
-    
+
         /** Set the volume resolution in horizontal direction
          **/
     VIGRA_EXPORT VolumeExportInfo & setXResolution( float );
@@ -473,7 +473,7 @@ void VolumeImportInfo::importImpl(MultiArrayView <3, T, Stride> &volume) const
             // import the image
             ImageImportInfo info (name.c_str ());
 
-            // generate a basic image view to the current layer
+            // generate a 2D image view to the current layer
             MultiArrayView <2, T, Stride> view (volume.bindOuter (i));
             vigra_precondition(view.shape() == info.shape(),
                 "importVolume(): the images have inconsistent sizes.");
@@ -706,13 +706,13 @@ void exportVolume (MultiArrayView <3, T, Tag> const & volume,
 
         // export the image
         info.setFileName(name.c_str ());
-        exportImage(srcImageRange(view), info); 
+        exportImage(srcImageRange(view), info);
     }
 }
 
 // for backward compatibility
 template <class T, class Tag>
-inline 
+inline
 void exportVolume (MultiArrayView <3, T, Tag> const & volume,
                    const std::string &name_base,
                    const std::string &name_ext)
