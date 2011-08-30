@@ -49,6 +49,7 @@
 #include "impex.hxx"
 #include "multi_array.hxx"
 #include "multi_pointoperators.hxx"
+#include "tiff_file.hxx"
 
 #ifdef _MSC_VER
 # include <direct.h>
@@ -174,6 +175,9 @@ class VolumeImportInfo
 
     std::string path_, name_, description_, pixelType_;
 
+    enum Format { RawInfo, FileSequence, TiledTIFF };
+
+    Format format_;
     std::string rawFilename_;
     std::string baseName_, extension_;
     std::vector<std::string> numbers_;
@@ -414,7 +418,51 @@ void VolumeImportInfo::importImpl(MultiArrayView <3, T, Stride> &volume) const
 {
     vigra_precondition(this->shape() == volume.shape(), "importVolume(): Volume must be shaped according to VolumeImportInfo.");
 
-    if(rawFilename_.size())
+    if(format_ == TiledTIFF)
+    {
+        TIFFFile f(path_.c_str(), "r");
+        
+        MultiArrayShape<3>::type
+            zero3D(0, 0, 0),
+            one3D(1, 1, 1),
+            imageSize = f.imageSize3D(),
+            tileSize = f.tileSize3D(),
+            tileCount = (imageSize + tileSize - one3D) / tileSize;
+
+        MultiArray<3, T> tileBuffer(tileSize);
+
+        // read all tiles; important background info on the libtiff API:
+        // - all tiles have the same size, i.e. we need to clip at the
+        //   upper boundaries in general
+        // - although the tiles are also numbered, the can only be
+        //   read by passing an arbitrary(!) coordinate pointing into
+        //   that slice...
+        MultiArrayShape<3>::type copyPos;
+        for(copyPos[0] = 0; copyPos[0] < imageSize[0]; copyPos[0] += tileSize[0])
+        {
+            for(copyPos[1] = 0; copyPos[1] < imageSize[1]; copyPos[1] += tileSize[1])
+            {
+                for(copyPos[2] = 0; copyPos[2] < imageSize[2]; copyPos[2] += tileSize[2])
+                {
+                    // clip by not always copying tileSize voxels into target volume
+                    MultiArrayShape<3>::type copySize(tileSize);
+                    for(char dim = 0; dim < 3; ++dim)
+                        if(copySize[dim] > imageSize[dim] - copyPos[dim])
+                            copySize[dim] = imageSize[dim] - copyPos[dim];
+
+                    MultiArrayView<3, T, Stride>
+                        targetVOI(volume.subarray(copyPos, imageSize));
+
+                    // now read and copy (TODO: handle T != pixelType()!)
+                    f.readTile(tileBuffer.begin(), copyPos[0], copyPos[1], copyPos[2], 0);
+                    
+                    copyMultiArray(srcMultiArrayRange(tileBuffer.subarray(zero3D, copySize)),
+                                   destMultiArray(targetVOI));
+                }
+            }
+        }
+    }
+    else if(rawFilename_.size())
     {
         std::string dirName, baseName;
         char oldCWD[2048];

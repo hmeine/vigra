@@ -44,7 +44,8 @@ ADD_LIBRARY(vigraimpex ${LIBTYPE}
     hdf5_rf_impex.cxx
     iccjpeg.c
     imageinfo.cxx
-	multi_impex.cxx
+    multi_impex.cxx
+    tiff_file.cxx
     jpeg.cxx
     png.cxx
     pnm.cxx

@@ -1,4 +1,5 @@
 #include "vigra/multi_impex.hxx"
+#include "codecmanager.hxx"
 
 #include <string>
 #include <sys/types.h>
@@ -47,7 +48,6 @@ std::string trimString(const std::string &s)
 } // namespace detail
 
 
-// find filenames matching the pattern "<path>/base[0-9]+ext"
 #ifdef _WIN32
 void splitPathFromFilename(const std::string &pathAndName,
                            std::string &path, std::string &name)
@@ -73,6 +73,7 @@ void splitPathFromFilename(const std::string &pathAndName,
     }
 }
 
+// find filenames matching the pattern "<path>/base[0-9]+ext" (Windows)
 VIGRA_EXPORT void findImageSequence(const std::string &name_base,
                        const std::string &name_ext,
                        std::vector<std::string> & numbers)
@@ -152,6 +153,7 @@ void splitPathFromFilename(const std::string &pathAndName,
     }
 }
 
+// find filenames matching the pattern "<path>/base[0-9]+ext" (Unix version)
 void findImageSequence(const std::string &name_base,
                        const std::string &name_ext,
                        std::vector<std::string> & numbers)
@@ -358,7 +360,23 @@ VolumeImportInfo::VolumeImportInfo(const std::string &filename)
   resolution_(1.f, 1.f, 1.f),
   numBands_(0)
 {
-    // first try image sequence loading
+    // for TIFF files, check for single-file, 3D data, tiled TIFFs first:
+    if(CodecManager::manager().getFileTypeByMagicString(filename) == "TIFF")
+    {
+        TIFFFile f(filename.c_str(), "r");
+
+        shape_ = f.imageSize3D();
+
+        pixelType_ = f.pixelType();
+        numBands_ = 1; // FIXME
+
+        path_ = filename;
+
+        format_ = TiledTIFF;
+        return;
+    }
+
+    // next, try image sequence loading
     std::string::const_reverse_iterator
         numBeginIt(filename.rbegin()), numEndIt(numBeginIt);
 
@@ -387,6 +405,7 @@ VolumeImportInfo::VolumeImportInfo(const std::string &filename)
                 shape_[2] = numbers.size();
                 std::swap(numbers, numbers_);
 
+                format_ = FileSequence;
                 break;
             }
         }
@@ -465,6 +484,8 @@ VolumeImportInfo::VolumeImportInfo(const std::string &filename)
             {
                 splitPathFromFilename(baseName_, path_, name_);
             }
+
+            format_ = RawInfo;
             return;
         }
 
