@@ -101,7 +101,7 @@ namespace vigra
     template< class ImageIterator, class Accessor, class SrcValueType >
     void read_bands( Decoder * dec, ImageIterator ys, Accessor a, SrcValueType )
     {
-        
+
         typedef unsigned int size_type;
         typedef typename ImageIterator::row_iterator DstRowIterator;
         typedef typename Accessor::value_type  AccessorValueType;
@@ -119,7 +119,7 @@ namespace vigra
         DstRowIterator xs = ys.rowIterator();
 
         // iterate
-        if (num_bands == 4) 
+        if (num_bands == 4)
         {
             // Speedup for this particular case
             unsigned int offset = dec->getOffset();
@@ -127,7 +127,7 @@ namespace vigra
             SrcValueType const * scanline1;
             SrcValueType const * scanline2;
             SrcValueType const * scanline3;
-            for( size_type y = 0; y < height; ++y, ++ys.y ) 
+            for( size_type y = 0; y < height; ++y, ++ys.y )
             {
                 dec->nextScanline();
                 xs = ys.rowIterator();
@@ -139,7 +139,7 @@ namespace vigra
                     (dec->currentScanlineOfBand(2));
                 scanline3 = static_cast< SrcValueType const * >
                     (dec->currentScanlineOfBand(3));
-                for( size_type x = 0; x < width; ++x, ++xs ) 
+                for( size_type x = 0; x < width; ++x, ++xs )
                 {
                     a.setComponent( *scanline0, xs, 0);
                     a.setComponent( *scanline1, xs, 1);
@@ -152,18 +152,18 @@ namespace vigra
                 }
             }
         }
-        else 
+        else
         {
             // General case
-            for( size_type y = 0; y < height; ++y, ++ys.y ) 
+            for( size_type y = 0; y < height; ++y, ++ys.y )
             {
                 dec->nextScanline();
-                for( size_type b = 0; b < num_bands; ++b ) 
+                for( size_type b = 0; b < num_bands; ++b )
                 {
                     xs = ys.rowIterator();
                     scanline = static_cast< SrcValueType const * >
                         (dec->currentScanlineOfBand(b));
-                    for( size_type x = 0; x < width; ++x, ++xs ) 
+                    for( size_type x = 0; x < width; ++x, ++xs )
                     {
                         a.setComponent( *scanline, xs, b );
                         scanline += dec->getOffset();
@@ -173,12 +173,12 @@ namespace vigra
         }
     } // read_bands()
 
-    
-    // specialization for speed-up (the standard version would also work, 
+
+    // specialization for speed-up (the standard version would also work,
     // but causes a stupid gcc waring)
-    template< class ImageIterator, class RGBType, 
+    template< class ImageIterator, class RGBType,
               class SrcValueType >
-    void read_bands( Decoder * dec, ImageIterator ys, 
+    void read_bands( Decoder * dec, ImageIterator ys,
                      RGBAccessor<RGBType> a, SrcValueType )
     {
         typedef unsigned int size_type;
@@ -201,7 +201,7 @@ namespace vigra
         SrcValueType const * scanline0;
         SrcValueType const * scanline1;
         SrcValueType const * scanline2;
-        for( size_type y = 0; y < height; ++y, ++ys.y ) 
+        for( size_type y = 0; y < height; ++y, ++ys.y )
         {
             dec->nextScanline();
             xs = ys.rowIterator();
@@ -211,7 +211,7 @@ namespace vigra
                 (dec->currentScanlineOfBand(1));
             scanline2 = static_cast< SrcValueType const * >
                 (dec->currentScanlineOfBand(2));
-            for( size_type x = 0; x < width; ++x, ++xs ) 
+            for( size_type x = 0; x < width; ++x, ++xs )
             {
                 a.setComponent( *scanline0, xs, 0);
                 a.setComponent( *scanline1, xs, 1);
@@ -223,10 +223,10 @@ namespace vigra
         }
     } // read_bands()
 
-    // specialization for speed-up (the standard version would also work, 
+    // specialization for speed-up (the standard version would also work,
     // but causes a stupid gcc waring)
     template< class ImageIterator, class ComponentType, class SrcValueType >
-    void read_bands( Decoder * dec, ImageIterator ys, 
+    void read_bands( Decoder * dec, ImageIterator ys,
                      VectorAccessor<TinyVector<ComponentType, 3> > a, SrcValueType )
     {
         typedef unsigned int size_type;
@@ -249,7 +249,7 @@ namespace vigra
         SrcValueType const * scanline0;
         SrcValueType const * scanline1;
         SrcValueType const * scanline2;
-        for( size_type y = 0; y < height; ++y, ++ys.y ) 
+        for( size_type y = 0; y < height; ++y, ++ys.y )
         {
             dec->nextScanline();
             xs = ys.rowIterator();
@@ -259,7 +259,7 @@ namespace vigra
                 (dec->currentScanlineOfBand(1));
             scanline2 = static_cast< SrcValueType const * >
                 (dec->currentScanlineOfBand(2));
-            for( size_type x = 0; x < width; ++x, ++xs ) 
+            for( size_type x = 0; x < width; ++x, ++xs )
             {
                 a.setComponent( *scanline0, xs, 0);
                 a.setComponent( *scanline1, xs, 1);
@@ -272,10 +272,10 @@ namespace vigra
     } // read_bands()
 
 
-    // specialization for speed-up (the standard version would also work, 
+    // specialization for speed-up (the standard version would also work,
     // but causes a stupid gcc waring)
     template< class ImageIterator, class ComponentType, class SrcValueType >
-    void read_bands( Decoder * dec, ImageIterator ys, 
+    void read_bands( Decoder * dec, ImageIterator ys,
                      VectorAccessor<TinyVector<ComponentType, 4> > a, SrcValueType )
     {
         typedef unsigned int size_type;
@@ -299,7 +299,7 @@ namespace vigra
         SrcValueType const * scanline1;
         SrcValueType const * scanline2;
         SrcValueType const * scanline3;
-        for( size_type y = 0; y < height; ++y, ++ys.y ) 
+        for( size_type y = 0; y < height; ++y, ++ys.y )
         {
             dec->nextScanline();
             xs = ys.rowIterator();
@@ -311,7 +311,7 @@ namespace vigra
                 (dec->currentScanlineOfBand(2));
             scanline3 = static_cast< SrcValueType const * >
                 (dec->currentScanlineOfBand(3));
-            for( size_type x = 0; x < width; ++x, ++xs ) 
+            for( size_type x = 0; x < width; ++x, ++xs )
             {
                 a.setComponent( *scanline0, xs, 0);
                 a.setComponent( *scanline1, xs, 1);
@@ -400,15 +400,15 @@ doxygen_overloaded_function(template <...> void importVectorImage)
         std::string pixeltype = dec->getPixelType();
 
         if ( pixeltype == "UINT8" )
-            read_bands( dec.get(), iter, a, (UInt8)0 );
+            read_bands( dec.get(), iter, a, UInt8() );
         else if ( pixeltype == "INT16" )
             read_bands( dec.get(), iter, a, Int16() );
         else if ( pixeltype == "UINT16" )
-            read_bands( dec.get(), iter, a, (UInt16)0 );
+            read_bands( dec.get(), iter, a, UInt16() );
         else if ( pixeltype == "INT32" )
             read_bands( dec.get(), iter, a, Int32() );
         else if ( pixeltype == "UINT32" )
-            read_bands( dec.get(), iter, a, (UInt32)0 );
+            read_bands( dec.get(), iter, a, UInt32() );
         else if ( pixeltype == "FLOAT" )
             read_bands( dec.get(), iter, a, float() );
         else if ( pixeltype == "DOUBLE" )
@@ -539,7 +539,7 @@ doxygen_overloaded_function(template <...> void importScalarImage)
 
             <DL>
             <DT>"BMP"<DD> Microsoft Windows bitmap image file.
-            <DT>"EXR"<DD> OpenEXR high dynamic range image format. 
+            <DT>"EXR"<DD> OpenEXR high dynamic range image format.
             (only available if libopenexr is installed)
             <DT>"GIF"<DD> CompuServe graphics interchange format; 8-bit color.
             <DT>"HDR"<DD> Radiance RGBE high dynamic range image format.
@@ -630,7 +630,7 @@ doxygen_overloaded_function(template <...> void importImage)
         SrcRowIterator xs = ys.rowIterator();
 
             // Speedup for the common cases
-        switch (num_bands) 
+        switch (num_bands)
         {
           case 2:
           {
@@ -650,7 +650,7 @@ doxygen_overloaded_function(template <...> void importImage)
                     scanline1 += offset;
                 }
                 enc->nextScanline();
-                
+
             }
             break;
           }
@@ -821,11 +821,11 @@ namespace detail {
         write_band( enc, sul, slr, sget, zero );
     }
 
-    // export scalar images with conversion 
+    // export scalar images with conversion
     template < class SrcIterator, class SrcAccessor, class T >
     void exportScalarImage(SrcIterator sul, SrcIterator slr, SrcAccessor sget,
-                           Encoder * enc, 
-                           const ImageExportInfo & info, 
+                           Encoder * enc,
+                           const ImageExportInfo & info,
                            T zero)
     {
         double fromMin, fromMax, toMin, toMax;
@@ -839,13 +839,13 @@ namespace detail {
             typedef typename SrcAccessor::value_type SrcValue;
             FindMinMax<SrcValue> minmax;
             inspectImage( sul, slr, sget, minmax );
-            
+
             fromMin = (double)minmax.min;
             fromMax = (double)minmax.max;
             if(fromMax <= fromMin)
                 fromMax = fromMin + 1.0;
        }
-        
+
         if(info.getToMin() < info.getToMax())
         {
             toMin = info.getToMin();
@@ -856,11 +856,11 @@ namespace detail {
             toMin = (double)NumericTraits<T>::min();
             toMax = (double)NumericTraits<T>::max();
         }
-        
+
         double scale = (toMax - toMin) / (fromMax - fromMin);
         double offset = (toMin / scale) - fromMin;
         BasicImage<T> image(slr-sul);
-        transformImage( sul, slr, sget, image.upperLeft(), image.accessor(), 
+        transformImage( sul, slr, sget, image.upperLeft(), image.accessor(),
                         linearIntensityTransform(scale, offset));
         write_band( enc, image.upperLeft(),
                     image.lowerRight(), image.accessor(), zero );
@@ -876,12 +876,12 @@ namespace detail {
            "exportImage(): file format does not support requested number of bands (color channels)");
         write_bands( enc, sul, slr, sget, zero );
     }
-    
+
     // export vector images with conversion
     template < class SrcIterator, class SrcAccessor, class T >
     void exportVectorImage(SrcIterator sul, SrcIterator slr, SrcAccessor sget,
-                           Encoder * enc, 
-                           const ImageExportInfo & info, 
+                           Encoder * enc,
+                           const ImageExportInfo & info,
                            T zero)
     {
         unsigned int bands = sget.size(sul);
@@ -910,7 +910,7 @@ namespace detail {
             if(fromMax <= fromMin)
                 fromMax = fromMin + 1.0;
         }
-        
+
         if(info.getToMin() < info.getToMax())
         {
             toMin = info.getToMin();
