@@ -64,6 +64,10 @@ ADD_LIBRARY(vigraimpex ${LIBTYPE}
     viff.cxx
     void_vector.cxx)
 
+IF (VIGRAIMPEX_LIBRARY_PREFIX)
+    SET_TARGET_PROPERTIES(vigraimpex PROPERTIES PREFIX ${VIGRAIMPEX_LIBRARY_PREFIX})
+ENDIF(VIGRAIMPEX_LIBRARY_PREFIX)
+
 set(SOVERSION 11)  # increment this after changing the vigraimpex library
 IF(MACOSX)
     SET_TARGET_PROPERTIES(vigraimpex PROPERTIES VERSION ${SOVERSION}.${vigra_version}
