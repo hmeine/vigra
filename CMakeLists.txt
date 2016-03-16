@@ -8,6 +8,10 @@ cmake_minimum_required(VERSION 2.6)
 
 PROJECT(vigra)
 
+#enable processing on multiple processes
+#include this file directly after the PROJECT statement to make it effective.
+INCLUDE ( $ENV{MLAB_MeVis_ThirdParty}/Configuration/MultiProcessCompilation.cmake )
+
 # read the current version from config_version.hxx
 file(READ ${vigra_SOURCE_DIR}/include/vigra/config_version.hxx VIGRA_VERSION_FILE)
 string(REGEX MATCH "VIGRA_VERSION_MAJOR[ \t\n]+[^ \t\n]+" VIGRA_VERSION_MAJOR ${VIGRA_VERSION_FILE})
