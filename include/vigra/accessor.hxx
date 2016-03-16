@@ -39,6 +39,7 @@
 #include "metaprogramming.hxx"
 #include "numerictraits.hxx"
 #include "tuple.hxx"
+#include "windows.h" // #undef DIFFERENCE if necessary
 
 namespace vigra {
 
