@@ -2418,16 +2418,7 @@ class HDF5File
         // We determine if the group exists by checking the return value of H5Gopen.
         // To do so, we must temporarily disable error reporting.
         // Alternatively, we could use H5LTfind_dataset(), but this is much slower.
-
-        // Save current error handling.
-        H5E_auto2_t  error_handler_ori;
-        void *error_data_ori;
-        H5Eget_auto(H5E_DEFAULT, &error_handler_ori, &error_data_ori);
-
-        // Turn off error handling and register function to restore it upon return.
-        H5Eset_auto(H5E_DEFAULT, NULL, NULL);
-        VIGRA_FINALLY(
-            H5Eset_auto(H5E_DEFAULT, error_handler_ori, error_data_ori));
+		HDF5DisableErrorOutput disableErrorOutput;
 
         // Open or create subgroups one by one
         std::string::size_type begin = 0, end = groupName.find('/');
